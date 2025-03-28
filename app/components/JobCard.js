@@ -36,8 +36,7 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 
-const { width } = Dimensions.get("window"); // Get screen width
-
+const { width } = Dimensions.get("window"); 
 const JobCard = React.memo(
   ({
     job,

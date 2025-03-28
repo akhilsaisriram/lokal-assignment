@@ -154,8 +154,8 @@ export default function Tab() {
               styles.searchInput,
               {
                 color: isDarkMode ? "#fff" : "#000",
-                borderColor: isDarkMode ? "#fff" : "gray", // ✅ Dynamic border color
-                borderWidth: 1, // ✅ Ensure border is visible
+                borderColor: isDarkMode ? "#fff" : "gray", 
+                borderWidth: 1, 
               },
             ]}
             placeholder="🔍Search by title, company, type, or location"
