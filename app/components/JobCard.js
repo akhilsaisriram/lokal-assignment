@@ -76,7 +76,7 @@ const JobCard = React.memo(
       return {
         opacity: withTiming(isVisible ? 1 : 1.5, { duration: 300 }),
         transform: [
-          { scale: withTiming(isVisible ? 1 : 0.90, { duration: 300 }) },
+          { scale: withTiming(isVisible ? 1 : 0.9, { duration: 300 }) },
         ],
       };
     });
@@ -379,6 +379,32 @@ const JobCard = React.memo(
                     </Text>
                   </View>
                 </View>
+                <View
+                  style={[
+                    {
+                      backgroundColor: bgColor,
+                      padding: 10,
+                      borderRadius: 12,
+                      marginBottom: 10,
+                      shadowColor: "#000",
+                      shadowOpacity: 0.2,
+                      shadowRadius: 4,
+                      alignSelf: "flex-start",
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: textColor,
+                    }}
+                  >
+                    Experience:
+                    {job.primary_details.Experience}
+                  </Text>
+                </View>
+   
                 <View
                   style={{
                     flexDirection: "row",
