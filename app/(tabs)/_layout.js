@@ -5,10 +5,9 @@ import Entypo from '@expo/vector-icons/Entypo';
 import { useColorScheme } from 'react-native';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme(); // Detects the current color scheme
+  const colorScheme = useColorScheme(); 
   console.log(colorScheme);
   
-  // Define icon colors based on the current theme
   const iconColor = colorScheme === 'dark' ? '#ffbb00' : '#ffbb00';
 
   return (

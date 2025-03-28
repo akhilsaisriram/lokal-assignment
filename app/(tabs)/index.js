@@ -20,6 +20,7 @@ import Animated, {
 import { AnimatedFAB, Button, Snackbar } from "react-native-paper";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { StatusBar } from "expo-status-bar";
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { API_BASE_URL } from "@env";
 
 const api = axios.create({
@@ -129,7 +130,7 @@ export default function Tab() {
             alignContent: "center",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: 25,
+            marginTop: 20,
           }}
         >
           <Text style={[styles.headerText, { color: "#ffbb00" }]}>Local jobs</Text>
@@ -291,14 +292,13 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     padding: 12,
-    paddingBottom: 8,
+    paddingBottom: 1,
   },
 
   headerText: {
     fontSize: 32,
     fontWeight: "bold",
     marginBottom: 10,
-    // marginTop: 25,
   },
   searchInput: {
     height: 40,
@@ -307,12 +307,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   listContent: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 0,
   },
   errorText: {
     color: "red",
     textAlign: "center",
-    marginVertical: 10,
+    marginVertical: 1,
     fontSize: 16,
   },
 });

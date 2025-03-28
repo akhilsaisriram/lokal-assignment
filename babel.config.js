@@ -1,20 +1,44 @@
+// module.exports = function (api) {
+//     api.cache(true);
+//     return {
+//       presets: [
+//         ["babel-preset-expo", { jsxImportSource: "nativewind" }],
+//         "nativewind/babel",
+//       ],
+//        plugins: ['react-native-reanimated/plugin', ["module:react-native-dotenv", {
+//         "moduleName": "@env",
+//         "path": ".env",
+//         "allowUndefined": false
+//       }]],
+//       env: {
+//         production: {
+//           plugins: ['react-native-paper/babel'],
+//         },
+//       },
+//     };
+//   };
 module.exports = function (api) {
-    api.cache(true);
-    return {
-      presets: [
-        ["babel-preset-expo", { jsxImportSource: "nativewind" }],
-        "nativewind/babel",
-      ],
-       plugins: ['react-native-reanimated/plugin', ["module:react-native-dotenv", {
-        "moduleName": "@env",
-        "path": ".env",
-        "allowUndefined": false
-      }]],
-      env: {
-        production: {
-          plugins: ['react-native-paper/babel'],
+  api.cache(true);
+  return {
+    presets: [
+      ["babel-preset-expo", { jsxImportSource: "nativewind" }],
+      "nativewind/babel",
+    ],
+    plugins: [
+      "react-native-reanimated/plugin",
+      [
+        "module:react-native-dotenv",
+        {
+          moduleName: "@env",
+          path: ".env",
+          allowUndefined: false,
         },
+      ],
+    ],
+    env: {
+      production: {
+        plugins: ["react-native-paper/babel"],
       },
-    };
+    },
   };
-  
+};

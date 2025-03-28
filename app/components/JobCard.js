@@ -6,18 +6,30 @@ import {
   TouchableOpacity,
   useColorScheme,
   Dimensions,
+  Image,
+  Modal,
+  Linking,
 } from "react-native";
 import { Card } from "react-native-elements";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Entypo, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Entypo,
+  FontAwesome,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
   runOnJS,
+  withRepeat,
+  withSequence,
+  Easing,
 } from "react-native-reanimated";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import {
   Gesture,
   GestureDetector,
@@ -121,6 +133,7 @@ const JobCard = React.memo(
     const formattedContact = job.custom_link
       ? job.custom_link.replace(/^tel:/, "")
       : "Not Available";
+
     const isDarkMode = theme === "dark";
     const styles = getStyles(isDarkMode);
 
@@ -136,9 +149,7 @@ const JobCard = React.memo(
           isTriggered.value = true; // Mark trigger to prevent multiple calls
         }
 
-        // Move back to original position
         offset.value = withSpring(0, {}, () => {
-          // Trigger the function ONLY after returning to original position
           if (isTriggered.value) {
             runOnJS(toggleBookmark)();
             isTriggered.value = false; // Reset flag for next swipe
@@ -149,18 +160,38 @@ const JobCard = React.memo(
     const animatedStyles = useAnimatedStyle(() => ({
       transform: [{ translateX: offset.value }],
     }));
+    const [modalVisible, setModalVisible] = useState(false);
 
-    const backgroundStyle = useAnimatedStyle(() => ({
-      opacity: backgroundOpacity.value,
-      backgroundColor: "yellow",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: "center",
-      alignItems: "center",
+    const openWhatsApp = () => {
+      if (job.contact_preference?.whatsapp_link) {
+        Linking.openURL(job.contact_preference.whatsapp_link);
+      }
+    };
+    const makeCall = () => {
+      Linking.openURL(`tel:${formattedContact}`);
+    };
+
+    ////////////////////////////////////animation /////////////////
+    const textColor = isDarkMode ? "#ffffff" : "#1E1E1E";
+    const bgColor = isDarkMode ? "#2D2D2D" : "#F5F5F5";
+
+    const scalevac = useSharedValue(1);
+
+    useEffect(() => {
+      scalevac.value = withRepeat(
+        withSequence(
+          withTiming(1.1, { duration: 500, easing: Easing.inOut(Easing.ease) }),
+          withTiming(1, { duration: 500, easing: Easing.inOut(Easing.ease) })
+        ),
+        -1,
+        true
+      );
+    }, []);
+
+    const animatedStylevac = useAnimatedStyle(() => ({
+      transform: [{ scale: scalevac.value }],
     }));
+
     return (
       <GestureHandlerRootView>
         <GestureDetector gesture={pan}>
@@ -191,9 +222,42 @@ const JobCard = React.memo(
                     />
                   )}
 
-                  <Text style={styles.jobTitle}>
-                    {job.title || "Not Available"}
-                  </Text>
+                  <TouchableOpacity onPress={() => setModalVisible(true)}>
+                    <Image
+                      source={{ uri: job.creatives[0].file }}
+                      style={styles.jobImage}
+                      resizeMode="cover"
+                    />
+                  </TouchableOpacity>
+                  <View style={{ width: "65%" }}>
+                    <Text
+                      style={[
+                        styles.jobTitle,
+                        {
+                          lineHeight: 22,
+                          flexShrink: 1,
+                          overflow: "hidden",
+                          width: "100%",
+                        },
+                      ]}
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
+                    >
+                      {job.title || "Not Available"}
+                    </Text>
+
+                    <Text
+                      style={{
+                        color: "green",
+                        fontWeight: "bold",
+                        fontSize: 14,
+                        marginTop: 5,
+                      }}
+                    >
+                      {job.primary_details?.Salary || "Not Available"}
+                    </Text>
+                  </View>
+
                   <TouchableOpacity onPress={toggleBookmark}>
                     <Entypo
                       name="bookmark"
@@ -201,32 +265,170 @@ const JobCard = React.memo(
                       color={isBookmarked ? "#FFD700" : "#808080"}
                     />
                   </TouchableOpacity>
+
+                  <Modal
+                    visible={modalVisible}
+                    transparent={true}
+                    animationType="fade"
+                  >
+                    <View style={styles.modalContainer}>
+                      <TouchableOpacity
+                        onPress={() => setModalVisible(false)}
+                        style={styles.modalBackground}
+                      >
+                        <Image
+                          source={{ uri: job.creatives[0].file }}
+                          style={styles.modalImage}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </Modal>
                 </View>
 
-                <View style={styles.cardBody}>
+                <View
+                  style={{
+                    marginTop: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <FontAwesome6
+                    name="hotel"
+                    size={15}
+                    color="#404040"
+                    style={{ marginRight: 5 }}
+                  />
                   <Text style={styles.detailText}>
-                    📍 Location:{" "}
-                    <Text style={styles.detailValue}>
-                      {job.primary_details?.Place || "Not Available"}
+                    {job.company_name || "Not Available"}
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: 5,
+                  }}
+                >
+                  <FontAwesome6
+                    name="location-dot"
+                    size={15}
+                    color="#404040"
+                    style={{ marginRight: 5 }}
+                  />
+                  <Text style={styles.detailText}>
+                    {job.primary_details?.Place || "Not Available"}
+                  </Text>
+                </View>
+                <Animated.View
+                  style={[
+                    {
+                      backgroundColor: bgColor,
+                      padding: 10,
+                      borderRadius: 12,
+                      marginBottom: 10,
+                      shadowColor: "#000",
+                      shadowOpacity: 0.2,
+                      shadowRadius: 4,
+                      alignSelf: "flex-start",
+                    },
+                    animatedStylevac,
+                  ]}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: textColor,
+                    }}
+                  >
+                    {job.job_tags[0].value}
+                  </Text>
+                </Animated.View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    // backgroundColor: "#F5F5F5",
+                    padding: 3,
+                    borderRadius: 10,
+                    shadowColor: "#000",
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                    elevation: 3,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {job.contact_preference?.whatsapp_link && (
+                    <TouchableOpacity
+                      onPress={openWhatsApp}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        backgroundColor: "#25D366",
+                        paddingVertical: 8,
+                        paddingHorizontal: 16,
+                        borderRadius: 8,
+                        flex: 1, // Ensures equal width
+                        justifyContent: "center",
+                        marginRight: 8, // Adds spacing between buttons
+                      }}
+                    >
+                      <FontAwesome name="whatsapp" size={20} color="#ffffff" />
+                      <Text
+                        style={{
+                          color: "#ffffff",
+                          fontSize: 16,
+                          marginLeft: 6,
+                        }}
+                      >
+                        Chat
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+
+                  <TouchableOpacity
+                    onPress={makeCall}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      backgroundColor: "#ffbb00",
+                      paddingVertical: 8,
+                      paddingHorizontal: 16,
+                      borderRadius: 8,
+                      flex: 1, // Ensures equal width
+                      justifyContent: "center",
+                      marginRight: 8,
+                    }}
+                  >
+                    <FontAwesome name="phone" size={20} color="#ffffff" />
+                    <Text
+                      style={{ color: "#ffffff", fontSize: 16, marginLeft: 6 }}
+                    >
+                      {formattedContact}
                     </Text>
-                  </Text>
-                  <Text style={styles.detailText}>
-                    💰 Salary:{" "}
-                    <Text style={styles.detailValue}>
-                      {job.primary_details?.Salary || "Not Available"}
-                    </Text>
-                  </Text>
-                  <Text style={styles.detailText}>
-                    📞 Contact:{" "}
-                    <Text style={styles.detailValue}>{formattedContact}</Text>
-                  </Text>
-                  <Text style={styles.detailText}>
-                    <FontAwesome name="whatsapp" size={18} color="#25D366" />{" "}
-                    WhatsApp:{" "}
-                    <Text style={styles.detailValue}>
-                      {job.whatsapp_no || "Not Available"}
-                    </Text>
-                  </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      borderWidth: 1,
+                      borderColor: "gray",
+                      paddingVertical: 8,
+                      paddingHorizontal: 5,
+                      borderRadius: 8,
+                      backgroundColor: "transparent",
+                      justifyContent: "center",
+                    }}
+                    onPress={() =>
+                      isSelectionMode ? onSelectChange(job.id) : navigateToDetails()
+                    }
+                    onLongPress={() => !isSelectionMode && onLongPress()}
+                  >
+                    <AntDesign name="right" size={20} color="gray" />
+                  </TouchableOpacity>
                 </View>
               </Card>
             </TouchableOpacity>
@@ -242,38 +444,67 @@ const getStyles = (isDarkMode) =>
     cardContainer: {
       borderRadius: 12,
       borderWidth: 0,
-      marginBottom: 5,
       backgroundColor: isDarkMode ? "#1E1E1E" : "#ffffff",
       padding: 15,
       shadowColor: isDarkMode ? "#ffffff" : "#ccc",
       shadowOffset: { width: 0, height: 3 },
       shadowOpacity: 0.2,
       shadowRadius: 8,
-      elevation: 6,
+      elevation: 1,
     },
     cardHeader: {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      marginBottom: 5,
+      marginBottom: 1,
+    },
+    jobImage: {
+      width: 80,
+      height: 80,
+      borderRadius: 5,
+      marginRight: 10,
     },
     jobTitle: {
-      fontSize: 18,
+      color: isDarkMode ? "#ffffff" : "#000000",
+
+      fontSize: 16,
       fontWeight: "bold",
-      color: isDarkMode ? "#ffffff" : "#333",
+    },
+    modalContainer: {
       flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0,0,0,0.8)",
+    },
+    modalBackground: {
+      width: "100%",
+      height: "100%",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalImage: {
+      width: "90%",
+      height: "80%",
     },
     cardBody: {
-      marginTop: 5,
+      marginTop: 20,
     },
     detailText: {
-      fontSize: 14,
+      fontSize: 15,
       color: isDarkMode ? "#BBBBBB" : "#555",
       marginBottom: 5,
     },
     detailValue: {
       fontWeight: "600",
       color: isDarkMode ? "#FFFFFF" : "#222",
+    },
+    whatsappLink: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: "#25D366",
+      textDecorationLine: "underline",
+      marginTop: 10,
+      // textAlign: "center",
     },
   });
 
