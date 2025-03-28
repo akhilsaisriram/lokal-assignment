@@ -20,11 +20,11 @@ import Animated, {
 import { AnimatedFAB, Button, Snackbar } from "react-native-paper";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { StatusBar } from "expo-status-bar";
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { API_BASE_URL } from "@env";
-
+import Skeleton from "../components/Skeleton";
 const api = axios.create({
-  baseURL:  API_BASE_URL,
+  baseURL: API_BASE_URL,
 });
 
 api.interceptors.response.use(
@@ -83,9 +83,19 @@ export default function Tab() {
     return (
       <View style={{ padding: 10 }}>
         <ActivityIndicator size="large" />
+
+        <Skeleton isDark={isDarkMode}></Skeleton>
+        <Skeleton isDark={isDarkMode}></Skeleton>
+
+        <Skeleton isDark={isDarkMode}></Skeleton>
+
+        <Skeleton isDark={isDarkMode}></Skeleton>
+        <Skeleton isDark={isDarkMode}></Skeleton>
+        <Skeleton isDark={isDarkMode}></Skeleton>
       </View>
     );
   };
+  console.log(loading);
 
   const validJobs = jobs.filter((job) => job && job.id && job.title);
 
@@ -104,9 +114,7 @@ export default function Tab() {
       jobTitle.includes(searchLower)
     );
   });
-  const [isExtended, setIsExtended] = React.useState(true);
 
-  const fabStyle = { bottom: 16, right: 16, position: "absolute" };
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: isDarkMode ? "#1E1E1E" : "#f2f2f2" }}
@@ -133,7 +141,9 @@ export default function Tab() {
             marginTop: 20,
           }}
         >
-          <Text style={[styles.headerText, { color: "#ffbb00" }]}>Local jobs</Text>
+          <Text style={[styles.headerText, { color: "#ffbb00" }]}>
+            Local jobs
+          </Text>
 
           <TouchableOpacity style={styles.profileIconContainer}>
             <MaterialIcons
@@ -154,8 +164,8 @@ export default function Tab() {
               styles.searchInput,
               {
                 color: isDarkMode ? "#fff" : "#000",
-                borderColor: isDarkMode ? "#fff" : "gray", 
-                borderWidth: 1, 
+                borderColor: isDarkMode ? "#fff" : "gray",
+                borderWidth: 1,
               },
             ]}
             placeholder="🔍Search by title, company, type, or location"
@@ -199,22 +209,21 @@ export default function Tab() {
             job={item}
             viewableItems={viewableItems}
             screenSource="index"
-            showSnackbar={showSnackbar} 
+            showSnackbar={showSnackbar}
           />
         )}
         keyExtractor={(item, index) => `${item.id}-${index}`}
         onEndReached={fetchJobs}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
-        contentContainerStyle={[
-          styles.listContent,
-          { flexGrow: 1 }, 
-        ]}
+        contentContainerStyle={[styles.listContent, { flexGrow: 1 }]}
         ListEmptyComponent={() => (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>
-              No Result found for "{searchQuery}" Try another.
-            </Text>
+            {!loading && (
+              <Text style={styles.emptyText}>
+                No Result found for "{searchQuery}" Try another.
+              </Text>
+            )}
           </View>
         )}
         onViewableItemsChanged={({ viewableItems: vItems }) => {
@@ -249,7 +258,7 @@ const styles = StyleSheet.create({
   },
 
   reloadButton: {
-    backgroundColor: "#B71C1C", 
+    backgroundColor: "#B71C1C",
     padding: 6,
     borderRadius: 6,
   },
@@ -262,7 +271,7 @@ const styles = StyleSheet.create({
   },
 
   searchContainer: {
-    position: "relative", 
+    position: "relative",
     borderRadius: 8,
     height: 40,
     justifyContent: "center",
@@ -281,13 +290,13 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -10 }],
   },
   snackbar: {
-    position: "absolute", 
-    top: -100, 
-    width: "60%", 
-    zIndex: 1000, 
-    elevation: 10, 
-    alignSelf: "center", 
-    textAlign: "center", 
+    position: "absolute",
+    top: -100,
+    width: "60%",
+    zIndex: 1000,
+    elevation: 10,
+    alignSelf: "center",
+    textAlign: "center",
     justifyContent: "center",
   },
   headerContainer: {
