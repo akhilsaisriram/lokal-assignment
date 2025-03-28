@@ -74,9 +74,9 @@ const JobCard = React.memo(
     const rStyle = useAnimatedStyle(() => {
       const isVisible = viewableItems.value.includes(job.id);
       return {
-        opacity: withTiming(isVisible ? 1 : 0, { duration: 300 }),
+        opacity: withTiming(isVisible ? 1 : 1.5, { duration: 300 }),
         transform: [
-          { scale: withTiming(isVisible ? 1 : 0.8, { duration: 300 }) },
+          { scale: withTiming(isVisible ? 1 : 0.90, { duration: 300 }) },
         ],
       };
     });
@@ -145,7 +145,7 @@ const JobCard = React.memo(
       })
       .onFinalize(() => {
         // Check if swiped past 10% in either direction
-        if (!isTriggered.value && Math.abs(offset.value) > width * 0.1) {
+        if (!isTriggered.value && Math.abs(offset.value) > width * 0.01) {
           isTriggered.value = true; // Mark trigger to prevent multiple calls
         }
 
@@ -321,31 +321,64 @@ const JobCard = React.memo(
                     {job.primary_details?.Place || "Not Available"}
                   </Text>
                 </View>
-                <Animated.View
-                  style={[
-                    {
-                      backgroundColor: bgColor,
-                      padding: 10,
-                      borderRadius: 12,
-                      marginBottom: 10,
-                      shadowColor: "#000",
-                      shadowOpacity: 0.2,
-                      shadowRadius: 4,
-                      alignSelf: "flex-start",
-                    },
-                    animatedStylevac,
-                  ]}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "bold",
-                      color: textColor,
-                    }}
+                  <Animated.View
+                    style={[
+                      {
+                        backgroundColor: bgColor,
+                        padding: 10,
+                        borderRadius: 12,
+                        marginBottom: 10,
+                        shadowColor: "#000",
+                        shadowOpacity: 0.2,
+                        shadowRadius: 4,
+                        alignSelf: "flex-start",
+                        marginRight: 8,
+                      },
+                      animatedStylevac,
+                    ]}
                   >
-                    {job.job_tags[0].value}
-                  </Text>
-                </Animated.View>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        color: textColor,
+                      }}
+                    >
+                      {job.job_tags[0].value}
+                    </Text>
+                  </Animated.View>
+                  <View
+                    style={[
+                      {
+                        backgroundColor: bgColor,
+                        padding: 10,
+                        borderRadius: 12,
+                        marginBottom: 10,
+                        shadowColor: "#000",
+                        shadowOpacity: 0.2,
+                        shadowRadius: 4,
+                        alignSelf: "flex-start",
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        color: textColor,
+                      }}
+                    >
+                      {job.primary_details.Job_Type}
+                    </Text>
+                  </View>
+                </View>
                 <View
                   style={{
                     flexDirection: "row",
@@ -353,10 +386,6 @@ const JobCard = React.memo(
                     // backgroundColor: "#F5F5F5",
                     padding: 3,
                     borderRadius: 10,
-                    shadowColor: "#000",
-                    shadowOpacity: 0.1,
-                    shadowRadius: 4,
-                    elevation: 3,
                     justifyContent: "space-between",
                   }}
                 >
@@ -423,7 +452,9 @@ const JobCard = React.memo(
                       justifyContent: "center",
                     }}
                     onPress={() =>
-                      isSelectionMode ? onSelectChange(job.id) : navigateToDetails()
+                      isSelectionMode
+                        ? onSelectChange(job.id)
+                        : navigateToDetails()
                     }
                     onLongPress={() => !isSelectionMode && onLongPress()}
                   >

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import {
   Text,
@@ -106,37 +105,37 @@ export default function settings() {
       setIsSelectionMode(true);
     }
   };
-console.log(selectedJobs);
-const handleDeleteSelected = async () => {
-  try {
-    setError(null);
+  console.log(selectedJobs);
+  const handleDeleteSelected = async () => {
+    try {
+      setError(null);
 
-    let bookmarks = await AsyncStorage.getItem("bookmarkedJobs");
-    bookmarks = bookmarks ? JSON.parse(bookmarks) : {};
+      let bookmarks = await AsyncStorage.getItem("bookmarkedJobs");
+      bookmarks = bookmarks ? JSON.parse(bookmarks) : {};
 
-    if (typeof bookmarks !== "object" || Array.isArray(bookmarks)) {
-      throw new Error("Invalid data format");
+      if (typeof bookmarks !== "object" || Array.isArray(bookmarks)) {
+        throw new Error("Invalid data format");
+      }
+
+      // Remove selected jobs from bookmarks
+      selectedJobs.forEach((jobId) => {
+        delete bookmarks[jobId];
+      });
+
+      // Save updated bookmarks back to AsyncStorage
+      await AsyncStorage.setItem("bookmarkedJobs", JSON.stringify(bookmarks));
+
+      // Update state to reflect the changes
+      const updatedJobList = Object.values(bookmarks);
+      setJobs(updatedJobList);
+      setSelectedJobs([]); // Clear selection after deletion
+
+      showSnackbar("Selected jobs deleted successfully"); // Show feedback
+    } catch (error) {
+      console.error("Error deleting selected jobs:", error);
+      setError("Failed to delete selected jobs. Please try again.");
     }
-
-    // Remove selected jobs from bookmarks
-    selectedJobs.forEach((jobId) => {
-      delete bookmarks[jobId];
-    });
-
-    // Save updated bookmarks back to AsyncStorage
-    await AsyncStorage.setItem("bookmarkedJobs", JSON.stringify(bookmarks));
-
-    // Update state to reflect the changes
-    const updatedJobList = Object.values(bookmarks);
-    setJobs(updatedJobList);
-    setSelectedJobs([]); // Clear selection after deletion
-
-    showSnackbar("Selected jobs deleted successfully"); // Show feedback
-  } catch (error) {
-    console.error("Error deleting selected jobs:", error);
-    setError("Failed to delete selected jobs. Please try again.");
-  }
-};
+  };
 
   return (
     <SafeAreaView
@@ -160,7 +159,7 @@ const handleDeleteSelected = async () => {
             alignContent: "center",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom:isSelectionMode? 30:10,
+            marginBottom: isSelectionMode ? 30 : 10,
           }}
         >
           <Text style={[styles.headerText, { color: "#ffbb00" }]}>
@@ -179,9 +178,9 @@ const handleDeleteSelected = async () => {
         >
           <TextInput
             style={[
-               styles.searchInput,
+              styles.searchInput,
               {
-                 color: isDarkMode ? "#fff" : "#000",
+                color: isDarkMode ? "#fff" : "#000",
                 borderColor: isDarkMode ? "#fff" : "gray",
                 borderWidth: 1,
                 marginBottom: 5,
@@ -193,82 +192,81 @@ const handleDeleteSelected = async () => {
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
-{isSelectionMode ? (
-  <View
-    style={{
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 10,
-      height: 50,
-    }}
-  >
-    {/* Select All / Deselect All Button */}
-    <TouchableOpacity
-      onPress={handleSelectAllToggle}
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: isDarkMode ? "#444" : "transparent", // Dark or Light Mode
-        padding: 10,
-        borderRadius: 8,
-        justifyContent: "center",
-        marginRight: 10, // Space between buttons
-        flex: 1, // Make buttons equal width
-      }}
-    >
-      <MaterialIcons
-        name={
-          selectedJobs.length === filteredJobs.length
-            ? "radio-button-checked"
-            : "radio-button-unchecked"
-        }
-        size={30}
-        color="#FFD700"
-      />
-      <Text
-        style={{
-          marginLeft: 10,
-          fontSize: 16,
-          fontWeight: "bold",
-          color: isDarkMode ? "#FFF" : "#222", // Adapt text color
-        }}
-      >
-        {selectedJobs.length === filteredJobs.length
-          ? "Deselect All"
-          : "Select All"}
-      </Text>
-    </TouchableOpacity>
+          {isSelectionMode ? (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginBottom: 10,
+                height: 50,
+              }}
+            >
+              {/* Select All / Deselect All Button */}
+              <TouchableOpacity
+                onPress={handleSelectAllToggle}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: isDarkMode ? "#444" : "transparent", // Dark or Light Mode
+                  padding: 10,
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  marginRight: 10, // Space between buttons
+                  flex: 1, // Make buttons equal width
+                }}
+              >
+                <MaterialIcons
+                  name={
+                    selectedJobs.length === filteredJobs.length
+                      ? "radio-button-checked"
+                      : "radio-button-unchecked"
+                  }
+                  size={30}
+                  color="#FFD700"
+                />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: isDarkMode ? "#FFF" : "#222", // Adapt text color
+                  }}
+                >
+                  {selectedJobs.length === filteredJobs.length
+                    ? "Deselect All"
+                    : "Select All"}
+                </Text>
+              </TouchableOpacity>
 
-    {/* Delete Selected Button */}
-    <TouchableOpacity
-      onPress={handleDeleteSelected}
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "red",
-        padding: 10,
-        borderRadius: 8,
-        justifyContent: "center",
-        flex: 1, // Equal width
-      }}
-    >
-      <MaterialIcons name="delete" size={30} color="#FFF" />
-      <Text
-        style={{
-          marginLeft: 10,
-          fontSize: 16,
-          fontWeight: "bold",
-          color: "#FFF",
-        }}
-      >
-        Delete Selected
-      </Text>
-    </TouchableOpacity>
-  </View>
-) : (
-  <View></View>
-)}
-
+              {/* Delete Selected Button */}
+              <TouchableOpacity
+                onPress={handleDeleteSelected}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "red",
+                  padding: 10,
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  flex: 1, // Equal width
+                }}
+              >
+                <MaterialIcons name="delete" size={30} color="#FFF" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: "#FFF",
+                  }}
+                >
+                  Delete Selected
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View></View>
+          )}
 
           {searchQuery.length > 0 && (
             <TouchableOpacity
@@ -430,7 +428,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   listContent: {
-    top:20,
-    paddingHorizontal: 10,
+    top: 20,
+    paddingHorizontal: 0,
   },
 });
