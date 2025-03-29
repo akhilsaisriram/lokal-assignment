@@ -8,13 +8,21 @@ import {
   useColorScheme,
   SafeAreaView,
   Linking,
+  Image,
+  Modal,
 } from "react-native";
 import { Card, Divider } from "react-native-elements";
-import { Entypo, FontAwesome } from "@expo/vector-icons";
+import {
+  Entypo,
+  FontAwesome,
+  FontAwesome5,
+  FontAwesome6,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Snackbar } from "react-native-paper";
-
+import AntDesign from "@expo/vector-icons/AntDesign";
 const JobDetails = () => {
   const { job } = useLocalSearchParams();
   const jobObject = job ? JSON.parse(job) : null;
@@ -43,7 +51,7 @@ const JobDetails = () => {
 
   const toggleBookmark = async () => {
     console.log("ll");
-    
+
     try {
       let bookmarks = await AsyncStorage.getItem("bookmarkedJobs");
       bookmarks = bookmarks ? JSON.parse(bookmarks) : {};
@@ -81,7 +89,12 @@ const JobDetails = () => {
       Linking.openURL(jobObject.contact_preference.whatsapp_link);
     }
   };
+  ////////////////////////////////////////////////////////////
+  const isDarkMode = theme === "dark";
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const textColor = isDarkMode ? "#ffffff" : "#1E1E1E";
+  const bgColor = isDarkMode ? "#2D2D2D" : "#F5F5F5";
   return (
     <SafeAreaView style={styles.safeArea(theme)}>
       <Snackbar
@@ -94,12 +107,30 @@ const JobDetails = () => {
       </Snackbar>
       <ScrollView contentContainerStyle={styles.container(theme)}>
         <Card containerStyle={styles.card(theme)}>
-          {/* Header Section */}
-          <View style={styles.header}>
-            <Text style={styles.title(theme)}>{jobObject.title}</Text>
+          <View style={styles.cardHeader}>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <Image
+                source={{ uri: jobObject.creatives[0].file }}
+                style={styles.jobImage}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
+            <View style={{ width: "65%" }}>
+              <Text
+                style={[
+                  styles.jobTitle,
+                  {
+                    width: "100%",
+                  },
+                ]}
+              >
+                {jobObject.title || "Not Available"}
+              </Text>
+            </View>
+
             <TouchableOpacity
               onPress={() => {
-                toggleBookmark()
+                toggleBookmark();
               }}
               hitSlop={{ top: 10, bottom: 20, left: 20, right: 20 }} // Expands touchable area
               activeOpacity={0.7} // Gives feedback when tapped
@@ -110,47 +141,307 @@ const JobDetails = () => {
                 color={isBookmarked ? "#FFD700" : "#808080"}
               />
             </TouchableOpacity>
+
+            <Modal
+              visible={modalVisible}
+              transparent={true}
+              animationType="fade"
+            >
+              <View style={styles.modalContainer}>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(false)}
+                  style={styles.modalBackground}
+                >
+                  <Image
+                    source={{ uri: jobObject.creatives[0].file }}
+                    style={styles.modalImage}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </View>
+            </Modal>
+          </View>
+          <View
+            style={{
+              marginTop: 5,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <FontAwesome
+              name="money"
+              size={18}
+              color="black"
+              style={{ marginRight: 5 }}
+            />
+            <Text
+              style={{
+                color: "green",
+                fontWeight: "bold",
+                fontSize: 14,
+                marginTop: 5,
+              }}
+            >
+              {jobObject.primary_details?.Salary || "Not Available"}
+            </Text>
+          </View>
+          <View
+            style={{
+              marginTop: 5,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <FontAwesome6
+              name="hotel"
+              size={15}
+              color="#404040"
+              style={{ marginRight: 5 }}
+            />
+            <Text style={styles.detailText}>
+              {jobObject.company_name || "Not Available"}
+            </Text>
+          </View>
+          <View
+            style={{
+              marginTop: 10,
+              marginBottom: 10,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <FontAwesome6
+              name="location-dot"
+              size={15}
+              color="#404040"
+              style={{ marginRight: 7 }}
+            />
+            <Text style={styles.detailText}>
+              {jobObject.primary_details?.Place || "Not Available"}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+            }}
+          >
+            <View
+              style={[
+                {
+                  backgroundColor: bgColor,
+                  padding: 10,
+                  borderRadius: 12,
+                  marginBottom: 10,
+                  shadowColor: "#000",
+                  shadowOpacity: 0.2,
+                  shadowRadius: 4,
+                  alignSelf: "flex-start",
+                  marginRight: 8,
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  color: textColor,
+                }}
+              >
+                {jobObject.job_tags[0].value}
+              </Text>
+            </View>
+            <View
+              style={[
+                {
+                  backgroundColor: bgColor,
+                  padding: 10,
+                  borderRadius: 12,
+                  marginBottom: 10,
+                  shadowColor: "#000",
+                  shadowOpacity: 0.2,
+                  shadowRadius: 4,
+                  alignSelf: "flex-start",
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  color: textColor,
+                }}
+              >
+                {jobObject.primary_details.Job_Type}
+              </Text>
+            </View>
           </View>
 
-          <Text style={styles.company(theme)}>{jobObject.company_name}</Text>
           <Divider style={styles.divider} />
-
-          {/* Job Details */}
-          <View style={styles.detailsContainer}>
-            <Text style={styles.detail(theme)}>
-              📍 Location: {jobObject.primary_details?.Place}
-            </Text>
-            <Text style={styles.detail(theme)}>
-              💼 Job Type: {jobObject.primary_details?.Job_Type}
-            </Text>
-            <Text style={styles.detail(theme)}>
-              ⏳ Experience: {jobObject.primary_details?.Experience}
-            </Text>
-            <Text style={styles.detail(theme)}>
-              🎓 Qualification: {jobObject.primary_details?.Qualification}
-            </Text>
-            <Text style={styles.detail(theme)}>
-              💰 Salary: {jobObject.primary_details?.Salary}
-            </Text>
-            <Text style={styles.detail(theme)}>
-              📅 Applications: {jobObject.num_applications}
-            </Text>
-            <Text style={styles.detail(theme)}>
-              🏢 Category: {jobObject.job_category}
-            </Text>
-            <Text style={styles.detail(theme)}>
-              🔖 Role: {jobObject.job_role}
-            </Text>
-
-            {/* Display Gender and Shift Timing */}
-            {jobObject.contentV3?.V3?.filter(
-              (item) =>
-                item.field_key === "Gender" || item.field_key === "Shift timing"
-            ).map((item, index) => (
-              <Text key={index} style={styles.detail(theme)}>
-                {item.field_key}: {item.field_value}
+          <View
+            style={{
+              backgroundColor: "#E3F2FD",
+              padding: 16,
+              borderRadius: 10,
+            }}
+          >
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                Job Heighlights
               </Text>
-            ))}
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 15,
+              }}
+            >
+              <FontAwesome
+                name="group"
+                size={20}
+                color="black"
+                style={{ marginRight: 5 }}
+              />
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                Number of Applications:
+              </Text>
+              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+                {jobObject.num_applications}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 15,
+              }}
+            >
+              <AntDesign
+                name="staro"
+                size={20}
+                color="black"
+                style={{ marginRight: 5 }}
+              />
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                Experience:
+              </Text>
+              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+                {jobObject.primary_details.Experience}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 15,
+              }}
+            >
+              <Entypo
+                name="open-book"
+                size={20}
+                color="black"
+                style={{ marginRight: 5 }}
+              />
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                Qualification:
+              </Text>
+              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+                {jobObject.primary_details.Qualification}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 15,
+              }}
+            >
+              <MaterialIcons
+                name="category"
+                size={20}
+                color="black"
+                style={{ marginRight: 5 }}
+              />
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                Category:
+              </Text>
+              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+                {jobObject.job_category}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 15,
+              }}
+            >
+              <MaterialIcons
+                name="work-outline"
+                size={20}
+                color="black"
+                style={{ marginRight: 5 }}
+              />
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                Job Role:
+              </Text>
+              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+                {jobObject.job_role}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "col",
+                marginTop: 15,
+              }}
+            >
+              <View>
+                {jobObject.contentV3?.V3?.filter(
+                  (item) =>
+                    item.field_key === "Gender" ||
+                    item.field_key === "Shift timing"
+                ).map((item, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginBottom: 15,
+                    }}
+                  >
+                    {item.field_key === "Gender" ? (
+                      <FontAwesome5
+                        name="venus-mars"
+                        size={20}
+                        color="black"
+                        style={{ marginRight: 5 }}
+                      />
+                    ) : (
+                      <MaterialIcons
+                        name="schedule"
+                        size={20}
+                        color="black"
+                        style={{ marginRight: 5 }}
+                      />
+                    )}
+                    <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                      {item.field_key}:
+                    </Text>
+                    <Text style={{ marginLeft: 5, fontSize: 16 }}>
+                      {item.field_value}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          </View>
+          <View style={styles.detailsContainer}>
+            {/* Display Gender and Shift Timing */}
 
             <Text style={styles.detail(theme)}>
               📜 Other Details: {jobObject.other_details}
@@ -173,8 +464,7 @@ const JobDetails = () => {
           </View>
         </Card>
       </ScrollView>
-      <View style={styles.hh}>
-      </View>
+      <View style={styles.hh}></View>
     </SafeAreaView>
   );
 };
@@ -187,8 +477,8 @@ const styles = {
   }),
   container: (theme) => ({
     flexGrow: 1,
-    paddingVertical: 30,
-    paddingHorizontal: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
     alignItems: "center",
     backgroundColor: theme === "dark" ? "#121212" : "#F8F9FA",
     height: "auto",
@@ -206,7 +496,6 @@ const styles = {
   }),
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 10,
   },
@@ -267,9 +556,45 @@ const styles = {
     color: "#333",
   },
   hh: {
-  height:60,
-
+    height: 60,
   },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 1,
+  },
+  jobImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  jobTitle: {
+    // color: isDarkMode ? "#ffffff" : "#000000",
+
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.8)",
+  },
+  modalBackground: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalImage: {
+    width: "90%",
+    height: "80%",
+  },
+  cardBody: {
+    marginTop: 20,
+  }
 };
 
 export default JobDetails;
