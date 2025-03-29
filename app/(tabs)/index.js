@@ -142,7 +142,7 @@ export default function Tab() {
           }}
         >
           <Text style={[styles.headerText, { color: "#ffbb00" }]}>
-            Local jobs
+            Lokal jobs
           </Text>
 
           <TouchableOpacity style={styles.profileIconContainer}>

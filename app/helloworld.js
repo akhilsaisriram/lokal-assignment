@@ -89,12 +89,16 @@ const JobDetails = () => {
       Linking.openURL(jobObject.contact_preference.whatsapp_link);
     }
   };
+      const makeCall = () => {
+        Linking.openURL(`tel:${formattedContact}`);
+      };
   ////////////////////////////////////////////////////////////
   const isDarkMode = theme === "dark";
 
   const [modalVisible, setModalVisible] = useState(false);
   const textColor = isDarkMode ? "#ffffff" : "#1E1E1E";
   const bgColor = isDarkMode ? "#2D2D2D" : "#F5F5F5";
+  const bgColorhl = isDarkMode ? "#2D2D2D" : "#E3F2FD";
   return (
     <SafeAreaView style={styles.safeArea(theme)}>
       <Snackbar
@@ -121,6 +125,7 @@ const JobDetails = () => {
                   styles.jobTitle,
                   {
                     width: "100%",
+                    color: textColor,
                   },
                 ]}
               >
@@ -171,7 +176,7 @@ const JobDetails = () => {
             <FontAwesome
               name="money"
               size={18}
-              color="black"
+              color={textColor}
               style={{ marginRight: 5 }}
             />
             <Text
@@ -195,10 +200,10 @@ const JobDetails = () => {
             <FontAwesome6
               name="hotel"
               size={15}
-              color="#404040"
+              color={textColor}
               style={{ marginRight: 5 }}
             />
-            <Text style={styles.detailText}>
+            <Text style={[styles.detailText, { color: textColor }]}>
               {jobObject.company_name || "Not Available"}
             </Text>
           </View>
@@ -213,10 +218,10 @@ const JobDetails = () => {
             <FontAwesome6
               name="location-dot"
               size={15}
-              color="#404040"
+              color={textColor}
               style={{ marginRight: 7 }}
             />
-            <Text style={styles.detailText}>
+            <Text style={[styles.detailText, { color: textColor }]}>
               {jobObject.primary_details?.Place || "Not Available"}
             </Text>
           </View>
@@ -281,7 +286,9 @@ const JobDetails = () => {
           <Divider style={styles.divider} />
           <View
             style={{
-              backgroundColor: "#E3F2FD",
+              backgroundColor: bgColorhl,
+
+              // backgroundColor: "#E3F2FD",
               padding: 16,
               borderRadius: 10,
             }}
@@ -289,7 +296,9 @@ const JobDetails = () => {
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 18, color: textColor }}
+              >
                 Job Heighlights
               </Text>
             </View>
@@ -303,13 +312,15 @@ const JobDetails = () => {
               <FontAwesome
                 name="group"
                 size={20}
-                color="black"
+                color={textColor}
                 style={{ marginRight: 5 }}
               />
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 16, color: textColor }}
+              >
                 Number of Applications:
               </Text>
-              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+              <Text style={{ marginLeft: 5, fontSize: 16, color: textColor }}>
                 {jobObject.num_applications}
               </Text>
             </View>
@@ -323,13 +334,15 @@ const JobDetails = () => {
               <AntDesign
                 name="staro"
                 size={20}
-                color="black"
+                color={textColor}
                 style={{ marginRight: 5 }}
               />
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 16, color: textColor }}
+              >
                 Experience:
               </Text>
-              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+              <Text style={{ marginLeft: 5, fontSize: 16, color: textColor }}>
                 {jobObject.primary_details.Experience}
               </Text>
             </View>
@@ -343,13 +356,15 @@ const JobDetails = () => {
               <Entypo
                 name="open-book"
                 size={20}
-                color="black"
+                color={textColor}
                 style={{ marginRight: 5 }}
               />
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 16, color: textColor }}
+              >
                 Qualification:
               </Text>
-              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+              <Text style={{ marginLeft: 5, fontSize: 16, color: textColor }}>
                 {jobObject.primary_details.Qualification}
               </Text>
             </View>
@@ -364,13 +379,15 @@ const JobDetails = () => {
               <MaterialIcons
                 name="category"
                 size={20}
-                color="black"
+                color={textColor}
                 style={{ marginRight: 5 }}
               />
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 16, color: textColor }}
+              >
                 Category:
               </Text>
-              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+              <Text style={{ marginLeft: 5, fontSize: 16, color: textColor }}>
                 {jobObject.job_category}
               </Text>
             </View>
@@ -384,13 +401,15 @@ const JobDetails = () => {
               <MaterialIcons
                 name="work-outline"
                 size={20}
-                color="black"
+                color={textColor}
                 style={{ marginRight: 5 }}
               />
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 16, color: textColor }}
+              >
                 Job Role:
               </Text>
-              <Text style={{ marginLeft: 5, fontSize: 16 }}>
+              <Text style={{ marginLeft: 5, fontSize: 16, color: textColor }}>
                 {jobObject.job_role}
               </Text>
             </View>
@@ -418,21 +437,29 @@ const JobDetails = () => {
                       <FontAwesome5
                         name="venus-mars"
                         size={20}
-                        color="black"
+                        color={textColor}
                         style={{ marginRight: 5 }}
                       />
                     ) : (
                       <MaterialIcons
                         name="schedule"
                         size={20}
-                        color="black"
+                        color={textColor}
                         style={{ marginRight: 5 }}
                       />
                     )}
-                    <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 16,
+                        color: textColor,
+                      }}
+                    >
                       {item.field_key}:
                     </Text>
-                    <Text style={{ marginLeft: 5, fontSize: 16 }}>
+                    <Text
+                      style={{ marginLeft: 5, fontSize: 16, color: textColor }}
+                    >
                       {item.field_value}
                     </Text>
                   </View>
@@ -450,7 +477,7 @@ const JobDetails = () => {
             <Divider style={styles.divider} />
 
             {/* Contact Details */}
-            <Text style={styles.detail(theme)}>
+            {/* <Text style={styles.detail(theme)}>
               📞 Contact HR: {formattedContact}
             </Text>
             {jobObject.contact_preference?.whatsapp_link && (
@@ -460,7 +487,66 @@ const JobDetails = () => {
                   WhatsApp
                 </Text>
               </TouchableOpacity>
-            )}
+            )} */}
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                // backgroundColor: "#F5F5F5",
+                padding: 3,
+                borderRadius: 10,
+                justifyContent: "space-between",
+              }}
+            >
+              {jobObject.contact_preference?.whatsapp_link && (
+                <TouchableOpacity
+                  onPress={openWhatsApp}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    backgroundColor: "#25D366",
+                    paddingVertical: 8,
+                    paddingHorizontal: 16,
+                    borderRadius: 8,
+                    flex: 1, // Ensures equal width
+                    justifyContent: "center",
+                    marginRight: 8, // Adds spacing between buttons
+                  }}
+                >
+                  <FontAwesome name="whatsapp" size={20} color="#ffffff" />
+                  <Text
+                    style={{
+                      color: "#ffffff",
+                      fontSize: 16,
+                      marginLeft: 6,
+                    }}
+                  >
+                    Chat
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity
+                onPress={makeCall}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "#ffbb00",
+                  paddingVertical: 8,
+                  paddingHorizontal: 16,
+                  borderRadius: 8,
+                  flex: 1, // Ensures equal width
+                  justifyContent: "center",
+                  marginRight: 8,
+                }}
+              >
+                <FontAwesome name="phone" size={20} color="#ffffff" />
+                <Text style={{ color: "#ffffff", fontSize: 16, marginLeft: 6 }}>
+                  {formattedContact}
+                </Text>
+              </TouchableOpacity>
+
+            </View>
           </View>
         </Card>
       </ScrollView>
@@ -594,7 +680,7 @@ const styles = {
   },
   cardBody: {
     marginTop: 20,
-  }
+  },
 };
 
 export default JobDetails;
