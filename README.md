@@ -32,12 +32,13 @@ Ensure you have the following installed:
 - [Git](https://git-scm.com/)
 
 ### Steps
+
 ```sh
 # Clone the repository
-git clone https://github.com/akhilsaisriram/local.git
+git clone https://github.com/akhilsaisriram/lokal-assignment.git
 
 # Navigate to project directory
-cd local
+cd lokal-assignment
 
 # Install dependencies
 npm install 
