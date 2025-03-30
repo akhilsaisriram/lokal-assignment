@@ -9,15 +9,14 @@ A mobile job board application built with **Expo**, allowing users to browse job
   <img src="./assets/home-dark.jpeg" alt="Bookmarks Screen" height="400">
    <img src="./assets/bookmark.jpeg" alt="Details Screen" height="400">
   <img src="./assets/bookmark dark select.jpeg" alt="Bookmarks" height="400">
-</div>
-
-<hr></hr>
-<div style="display: flex; flex-wrap: wrap; gap: 10px;">
   <img src="./assets/jobdeatil.jpeg" alt="Details Screen" height="400">
   <img src="./assets/jobdeatil dark.jpeg" alt="Bookmarks" height="400">
 </div>
+
+<hr></hr>
+
 ## 📹 Demo
-🎥 Watch the app in action: [Video Demo](https://drive.google.com/file/d/1b3JsDP6T32MfiQ7d7wEPQ6zwJlhRXKFc/view?usp=sharing)
+🎥 Watch the app in action: [Video Demo](https://drive.google.com/file/d/1KOeTbJMQzumrIujS6ZEhLZu1rUqVj8V_/view?usp=sharing)
 
 ## 📄 Documentation
 📖 Read the full documentation: [Google Docs](https://docs.google.com/document/d/1kW5TBDXTRV4RGegYSqrWS0fLRg-fj237/edit?usp=sharing)
