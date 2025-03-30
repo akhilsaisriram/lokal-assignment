@@ -23,6 +23,30 @@ A mobile job board application built with **Expo**, allowing users to browse job
 
 
 
+## 🔧 Installation & Setup
+
+### Prerequisites
+Ensure you have the following installed:
+- [Node.js](https://nodejs.org/)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- [Git](https://git-scm.com/)
+
+### Steps
+```sh
+# Clone the repository
+git clone https://github.com/akhilsaisriram/lokal.git
+
+# Navigate to project directory
+cd lokal-main
+
+# Install dependencies
+yarn install  # or npm install
+
+# Start the Expo development server
+npx expo start 
+```
+
+
 ## 🚀 Features
 
 ### 🖥 User Interface
@@ -50,29 +74,6 @@ A mobile job board application built with **Expo**, allowing users to browse job
 - **State Management:** [AsyncStorage](https://react-native-async-storage.github.io/async-storage/) for persistent bookmarks.
 - **Animations:** [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/) for smooth UI transitions.
 - **HTTP Requests:** [Axios](https://axios-http.com/) with error handling.
-
-## 🔧 Installation & Setup
-
-### Prerequisites
-Ensure you have the following installed:
-- [Node.js](https://nodejs.org/)
-- [Expo CLI](https://docs.expo.dev/get-started/installation/)
-- [Git](https://git-scm.com/)
-
-### Steps
-```sh
-# Clone the repository
-git clone https://github.com/akhilsaisriram/lokal.git
-
-# Navigate to project directory
-cd lokal-main
-
-# Install dependencies
-yarn install  # or npm install
-
-# Start the Expo development server
-npx expo start 
-```
 
 
 
