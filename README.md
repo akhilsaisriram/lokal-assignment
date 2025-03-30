@@ -34,13 +34,15 @@ Ensure you have the following installed:
 ### Steps
 ```sh
 # Clone the repository
-git clone https://github.com/akhilsaisriram/lokal.git
+git clone https://github.com/akhilsaisriram/local.git
 
 # Navigate to project directory
-cd lokal-main
+cd local
 
 # Install dependencies
-yarn install  # or npm install
+npm install 
+ # or
+yarn install
 
 # Start the Expo development server
 npx expo start 
