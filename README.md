@@ -8,7 +8,7 @@ A mobile job board application built with **Expo**, allowing users to browse job
   <img src="./assets/home.jpeg" alt="Job Details" height="400">
   <img src="./assets/home-dark.jpeg" alt="Bookmarks Screen" height="400">
    <img src="./assets/bookmark.jpeg" alt="Details Screen" height="400">
-  <img src="./assets/jobdetails select in dark.jpeg" alt="Bookmarks" height="400">
+  <img src="./assets/jobdetails select in dark.jpg" alt="Bookmarks" height="400">
   <img src="./assets/jobdeatil.jpeg" alt="Details Screen" height="400">
   <img src="./assets/jobdeatil dark.jpeg" alt="Bookmarks" height="400">
 </div>
